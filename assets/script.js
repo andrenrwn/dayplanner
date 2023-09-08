@@ -31,6 +31,65 @@ var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data 
 var show_starthour = thishour - (onehour * 11); // 11-hour before
 var show_endhour = thishour + (onehour * 12); // 12-hour after
 
+// Global variables - planner data
+class plannerobj {
+    constructor() {
+        this.pdata = { "a": "b" };
+        this.storagekey = "dayplannerdata";
+        this.load_data();
+    }
+    // Store data in memory in this object
+    //data: {},
+    print_data(key) {
+        if (key === undefined) {
+            console.log(this.pdata);
+        } else {
+            console.log(this.pdata[key]);
+        }
+        return true;
+    }
+    // Get data from localstorage
+    get_data(key) {
+        if (key === undefined) {
+            console.log(this.pdata);
+            return this.pdata;
+        } else {
+            console.log(this.pdata[key]);
+            return this.pdata[key];
+        }
+    }
+    // Store data in memory
+    set_data(key, content) {
+        if (key === undefined) {
+            console.log(this.pdata);
+        } else {
+            console.log("Overwriting " + this.pdata[key] + " on key " + key + " with " + content);
+            this.pdata[key] = content;
+        }
+        this.store_data();
+        return true;
+    }
+    // Load data from localstorage
+    load_data () {
+        let newdata = {};
+        console.log("loading from storage");
+        console.log(this.pdata);
+        newdata = JSON.parse(localStorage.getItem(this.storagekey));
+        Object.assign(this.pdata, newdata); // merge data from storage
+        console.log(this.pdata);
+    }
+    // Store data to localstorage
+    store_data() {
+        console.log("saving to storage");
+        console.log(this.pdata);
+        localStorage.setItem(this.storagekey, JSON.stringify(this.pdata));
+        return true;
+    }
+}
+
+var planner = new plannerobj();
+
+
 // <!--Example of a time block.The "present" class specifies background color.-->
 var time_block = $($.parseHTML('\
     <div class= "row time-block" > \
@@ -64,7 +123,10 @@ for (var i = show_starthour; i <= show_endhour; i += onehour) {
         hour12: true,
     });
 
-    time_block.attr("id", "hour-" + hourstring.replace(/ /g, ''));
+    // time_block.attr("id", "hour-" + hourstring.replace(/ /g, '')); // actually not useful
+    // time_block.attr("data-epochr", i); // set the epoch hour as data key
+    time_block.attr("id", i); // set the ID to the epoch hour
+
     if (i < thishour) {
         time_block.addClass("past");
     } else if (i === thishour) {
@@ -73,12 +135,15 @@ for (var i = show_starthour; i <= show_endhour; i += onehour) {
         time_block.addClass("future");
     }
     time_block.children().eq(0).text(hourstring);
+    time_block.children().eq(1).val(planner.get_data(i));
     time_block.clone().appendTo("#schedulelist");
 }
 
 // Save button is clicked, unblink the save icon
 $("div.row.time-block > .saveBtn").on("click", function () {
     console.log($(this).parent()[0].id);
+    console.log($(this).prev().val());
+    planner.set_data($(this).parent()[0].id, $(this).prev().val());
     $(this).removeClass("blink_me");  // unblink the save button after save
 });
 
@@ -87,3 +152,7 @@ $("div.row.time-block > textarea").on("input", function () {
     console.log($(this).parent()[0].id);
     $(this).next().addClass("blink_me"); // content changed, apply blink to save button
 });
+
+//planner.print_data();
+//planner.print_data("a");
+//planner.get_data();
