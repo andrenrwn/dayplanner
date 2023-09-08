@@ -25,15 +25,11 @@
 
 // Global variables
 var today = new Date();
-var dd = String(today.getDate()).padStart(2, '0');
-var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
-var yyyy = today.getFullYear();
-var hr = today.getHours();
 var selectedday = today;
 const onehour = 3600000; // 1 hour in epoch milliseconds
-var thishour = Math.floor(Date.parse(selectedday)/onehour)*onehour; // data in hourly blocks
-var show_starthour = thishour - (onehour*11); // 11-hour before
-var show_endhour = thishour + (onehour*12); // 12-hour after
+var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
+var show_starthour = thishour - (onehour * 11); // 11-hour before
+var show_endhour = thishour + (onehour * 12); // 12-hour after
 
 // <!--Example of a time block.The "present" class specifies background color.-->
 var time_block = $($.parseHTML('\
@@ -47,17 +43,28 @@ var time_block = $($.parseHTML('\
     '));
 
 
+// Display the current Day
+$("#currentDay").text(selectedday.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true,
+}));
+
 // Build out schedule table for the day
-for (var i = show_starthour; i <= show_endhour; i+=onehour) {
+for (var i = show_starthour; i <= show_endhour; i += onehour) {
     let d = new Date(0);
-    d.setUTCSeconds(i/1000);
-    console.log(d, i/1000);
+    d.setUTCSeconds(i / 1000);
+    console.log(d, i / 1000);
     let hourstring = d.toLocaleString('en-US', {
         hour: 'numeric',
         hour12: true,
-      });
-      
-    time_block.attr("id", "hour-" + hourstring.replace(/ /g,''));
+    });
+
+    time_block.attr("id", "hour-" + hourstring.replace(/ /g, ''));
     if (i < thishour) {
         time_block.addClass("past");
     } else if (i === thishour) {
