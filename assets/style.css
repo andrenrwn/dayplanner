@@ -3,6 +3,14 @@
 Bootstrap calendar from https://colorlib.com/wp/template/calendar-07/
 */
 
+:root {
+  --color-past: #d3d3d3;
+  --color-present: #ff6961;
+  --color-timebar: #FF8B85;
+  --color-future: #77dd77;
+  --color-btn: #06aed5;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -29,6 +37,24 @@ textarea {
   white-space: pre-wrap;
 }
 
+#timebar {
+  position:absolute;
+  display: flex;
+  flex-direction:row-reverse;
+  margin:0;
+  padding:0;
+  top:0;
+  left:0;
+  width:100%;
+  height:5%;
+  color:black;
+  background-color: var(--color-timebar);
+  opacity: 50%;
+  text-align: end;
+  align-items:end;
+  font-size:70%;
+}
+
 .time-block {
   border-radius: 15px;
 }
@@ -38,23 +64,24 @@ textarea {
 }
 
 .hour {
+  position: relative;
   background-color: #ffffff;
   color: #000000;
   border-top: 1px dashed #000000;
 }
 
 .past {
-  background-color: #d3d3d3;
+  background-color: var(--color-past);
   color: white;
 }
 
 .present {
-  background-color: #ff6961;
+  background-color: var(--color-present);
   color: white;
 }
 
 .future {
-  background-color: #77dd77;
+  background-color: var(--color-future);
   color: white;
 }
 
@@ -62,7 +89,7 @@ textarea {
   border-left: 1px solid black;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
-  background-color: #06aed5;
+  background-color: var(--color-btn);
   color: white;
 }
 

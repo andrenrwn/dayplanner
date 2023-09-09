@@ -86,6 +86,7 @@ class plannerobj {
     }
 }
 
+// Declare a global variable planner object
 var planner = new plannerobj();
 
 
@@ -101,10 +102,18 @@ var time_block = $($.parseHTML('\
     </div >\
     '));
 
+// -------------------------
+// Clock (present date/time)
+// -------------------------
+
+// The time bar is a div on the current hour time block
+var time_bar = $($.parseHTML('<div id="timebar">10:30</div>'));
 
 function refreshclock() {
-    // Display the current Day
-    $("#currentDay").text(Date().toLocaleString('en-US', {
+    let d = new Date();
+
+    // Display the current Day on top clock
+    $('#currentDay').text(Date().toLocaleString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -113,14 +122,24 @@ function refreshclock() {
         second: 'numeric',
         hour12: true,
     }));
+
+    // Display the current time:seconds on the time bar in the current hour block
+    $('#timebar').text(d.getMinutes() + ":" + d.getSeconds());
+    $('#timebar').height((d.getMinutes()*60+d.getSeconds())/36 + "%");
 }
 
 // Create a timer to display current date/time
 const timerID = setInterval(refreshclock, 1000); // update every second
 
+// ------------------
+// Render day planner
+// ------------------
+
 // Build out schedule table for the day
 function display_table(starthour, endhour) {
-    $("#schedulelist").empty();
+    $("#schedulelist").empty(); // Clear all time blocks from the display
+
+    // Add time blocks one by one
     for (var i = starthour; i <= endhour; i += onehour) {
         let d = new Date(0);
         d.setUTCSeconds(i / 1000);
@@ -135,6 +154,10 @@ function display_table(starthour, endhour) {
         time_block.attr("id", i); // set the ID to the epoch hour
 
         time_block.removeClass("past present future");
+        time_block.remove("#timebar");
+
+        time_block.children().eq(0).text(hourstring);
+        time_block.children().eq(1).val(planner.get_data(i));
 
         if (i < thishour) {
             time_block.addClass("past");
@@ -142,18 +165,22 @@ function display_table(starthour, endhour) {
         } else if (i === thishour) {
             time_block.addClass("present");
             time_block.children().eq(1).attr("id", "timenow");
+            time_block.children().eq(0).prepend(time_bar);
         } else {
             time_block.addClass("future");
             time_block.children().eq(1).attr("id", "");
         }
-        time_block.children().eq(0).text(hourstring);
-        time_block.children().eq(1).val(planner.get_data(i));
+
         time_block.clone().appendTo("#schedulelist");
     }
 }
 
-// Add all elements before attaching JQuery events to it
+// Render all elements before attaching JQuery events to it
 display_table(show_starthour, show_endhour);
+
+// -----------------
+// Add jQuery Events
+// -----------------
 
 // Save button is clicked, unblink the save icon
 $("div.row.time-block > .saveBtn").on("click", function () {
@@ -200,5 +227,4 @@ $("#down-one").on("click keyup", function () {
 refreshclock();
 
 //planner.print_data();
-//planner.print_data("a");
 //planner.get_data();
