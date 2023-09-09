@@ -34,18 +34,20 @@
       <div class="collapse show" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item px-2">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link" aria-current="page" href="#">Home</a>
           </li>
           <li class="nav-item px-2">
             <a class="nav-link" href="#timenow">Now</a>
           </li>
           <!-- bootstrap collapsible button -->
-          <li class="nav-item nav-link px-2" type="button" data-toggle="collapse" data-target="#collapseExample"
-            aria-expanded="false" aria-controls="collapseExample">
+          <li id="selectdaytoggle" class="nav-item nav-link px-2" type="button" data-toggle="collapse" data-target="#collapseExample"
+            aria-expanded="false" aria-controls="collapseExample" tabindex="0">
             Select Date
           </li>
           <li class="nav-item px-2">
-            <a id="currentDay" class="nav-link"></a>
+            <a id="currentDay" class="nav-link">
+              Sun Jan 1 2023 00:00:00 GMT+0000 (Greenwich Mean Time)
+            </a>
           </li>
           <div class="d-flex" role="search">
             <input id="searchtext" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -66,28 +68,30 @@
   </header>
 
   <div class="container-fluid px-5">
-    <!-- Use class for "past", "present", and "future" to apply styles to the
-        time-block divs accordingly. The javascript will need to do this by
-        adding/removing these classes on each div by comparing the hour in the
-        id to the current hour. The html provided below is meant to be an example
-        demonstrating how the css provided can be leveraged to create the
-        desired layout and colors. The html below should be removed or updated
-        in the finished product. Remember to delete this comment once the
-        code is implemented.
-        -->
+    <!-- The class for "past", "present", and "future" apply styles to the
+        time-block divs. Javascript set these classes according to the current hour.
+    -->
 
-    <!-- up button -->
-    <div id="up-one" class="d-flex justify-content-center btn" type="button">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z"/>
+    <!-- up button starts the display one hour before -->
+    <div id="up-one" class="scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+        class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+          d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
       </svg>
     </div>
 
     <!-- main container for hourly time blocks -->
     <main id="schedulelist">
-      <!-- Example of a past time block. The "past" class adds a gray background color. -->
+
+      <!-- Example of a time block.
+           "past" class adds a gray background color. 
+           "present" class adds a red background color.
+           "future" class adds a green background color.
+           These divs will be added by javascript.
+      -->
       <!--
-      <div id="hour-9" class="row time-block past">
+      <div id="hour-9" class="row time-block past present future">
         <div class="col-2 col-md-1 hour text-center py-3">9AM</div>
         <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
         <button class="btn saveBtn col-2 col-md-1" aria-label="save">
@@ -95,47 +99,24 @@
         </button>
       </div>
       -->
-      <!-- Example of a present time block. The "present" class adds a red background color. -->
-      <!--
-      <div id="hour-10" class="row time-block present">
-        <div class="col-2 col-md-1 hour text-center py-3">10AM</div>
-        <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
-        <button class="btn saveBtn col-2 col-md-1" aria-label="save">
-          <i class="fas fa-save" aria-hidden="true"></i>
-        </button>
-      </div>
-      -->
-      <!-- Example of a future time block. The "future" class adds a green background color. -->
-      <!--
-      <div id="hour-11" class="row time-block future">
-        <div class="col-2 col-md-1 hour text-center py-3">11AM</div>
-        <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
-        <button class="btn saveBtn col-2 col-md-1" aria-label="save">
-          <i class="fas fa-save" aria-hidden="true"></i>
-        </button>
-      </div>
-      -->
     </main>
-    <!-- down button -->
-    <button id="down-one" class="d-flex justify-content-center btn" type="button">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z"/>
+
+    <!-- down button starts the display one hour after -->
+    <div id="down-one" class="scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+        class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+          d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
       </svg>
-    </button>
+    </div>
 
     <footer class="d-flex justify-content-center align-middle">
-      <p class="align-middle">UTA Full Stack</p>
+      <p class="align-middle">Day Planner</p>
     </footer>
 
   </div>
 
-  <!--
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
-    integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
-  -->
+  <!-- Jquery, Bootstrap, Popper (required by bootstrap) -->
   <script src="https://code.jquery.com/jquery-3.7.1.slim.js"
     integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
@@ -144,7 +125,9 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"></script>
+  <!-- Not using DayJS since we are using epoch and Date() for calculations
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"></script>
+  -->
   <script src="./assets/script.js"></script>
 </body>
 

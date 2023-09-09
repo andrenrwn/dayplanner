@@ -102,81 +102,102 @@ var time_block = $($.parseHTML('\
     '));
 
 
-// Create a timer to display current date/time
-const timerID = setInterval(
-    function () {
-        // Display the current Day
-        $("#currentDay").text(Date().toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            hour12: true,
-        }));
-    }, 1000 // update every second
-);
+function refreshclock() {
+    // Display the current Day
+    $("#currentDay").text(Date().toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+    }));
+}
 
+// Create a timer to display current date/time
+const timerID = setInterval(refreshclock, 1000); // update every second
 
 // Build out schedule table for the day
-for (var i = show_starthour; i <= show_endhour; i += onehour) {
-    let d = new Date(0);
-    d.setUTCSeconds(i / 1000);
-    console.log(d, i / 1000);
-    let hourstring = d.toLocaleString('en-US', {
-        hour: 'numeric',
-        hour12: true,
-    });
+function display_table(starthour, endhour) {
+    $("#schedulelist").empty();
+    for (var i = starthour; i <= endhour; i += onehour) {
+        let d = new Date(0);
+        d.setUTCSeconds(i / 1000);
+        console.log(d, i / 1000);
+        let hourstring = d.toLocaleString('en-US', {
+            hour: 'numeric',
+            hour12: true,
+        });
 
-    // time_block.attr("id", "hour-" + hourstring.replace(/ /g, '')); // actually not useful
-    // time_block.attr("data-epochr", i); // set the epoch hour as data key
-    time_block.attr("id", i); // set the ID to the epoch hour
+        // time_block.attr("id", "hour-" + hourstring.replace(/ /g, '')); // actually not useful
+        // time_block.attr("data-epochr", i); // set the epoch hour as data key
+        time_block.attr("id", i); // set the ID to the epoch hour
 
-    if (i < thishour) {
-        time_block.addClass("past");
-        time_block.children().eq(1).attr("id", "");
-    } else if (i === thishour) {
-        time_block.addClass("present");
-        time_block.children().eq(1).attr("id", "timenow");
-    } else {
-        time_block.addClass("future");
-        time_block.children().eq(1).attr("id", "");
+        time_block.removeClass("past present future");
+
+        if (i < thishour) {
+            time_block.addClass("past");
+            time_block.children().eq(1).attr("id", "");
+        } else if (i === thishour) {
+            time_block.addClass("present");
+            time_block.children().eq(1).attr("id", "timenow");
+        } else {
+            time_block.addClass("future");
+            time_block.children().eq(1).attr("id", "");
+        }
+        time_block.children().eq(0).text(hourstring);
+        time_block.children().eq(1).val(planner.get_data(i));
+        time_block.clone().appendTo("#schedulelist");
     }
-    time_block.children().eq(0).text(hourstring);
-    time_block.children().eq(1).val(planner.get_data(i));
-    time_block.clone().appendTo("#schedulelist");
 }
+
+// Add all elements before attaching JQuery events to it
+display_table(show_starthour, show_endhour);
 
 // Save button is clicked, unblink the save icon
 $("div.row.time-block > .saveBtn").on("click", function () {
-    console.log($(this).parent()[0].id);
-    console.log($(this).prev().val());
+    //console.log($(this).parent()[0].id);
+    //console.log($(this).prev().val());
     planner.set_data($(this).parent()[0].id, $(this).prev().val());
     $(this).removeClass("blink_me");  // unblink the save button after save
 });
 
 // If content is modified in any textarea section, blink the save icon sibling element
 $("div.row.time-block > textarea").on("input", function () {
-    console.log($(this).parent()[0].id);
+    //console.log($(this).parent()[0].id);
     $(this).next().addClass("blink_me"); // content changed, apply blink to save button
 });
 
-// Search button is pressed
+// Navbar - pressing enter should also toggle bootstrap collapsible button
+$("#selectdaytoggle").keyup(function (event) {
+    console.log("keypress on collapse button");
+    if (event.keyCode === 13) {
+        $("#selectdaytoggle").click();
+    }
+});
+
+// Navbar - Search button is pressed
 $("#search").on("click", function () {
     console.log("search for: ");
     console.log($(this).prev().val());
 });
 
 // Up button is pressed
-$("up-one").on("click", function () {
-    console.log("up");
+$("#up-one").on("click keyup", function () {
+    show_starthour -= onehour;
+    show_endhour -= onehour;
+    display_table(show_starthour, show_endhour);
 });
 
 // Down button is pressed
-$("down-one").on("click", function () {
-    console.log("down");
+$("#down-one").on("click keyup", function () {
+    show_starthour += onehour;
+    show_endhour += onehour;
+    display_table(show_starthour, show_endhour);
 });
+
+refreshclock();
 
 //planner.print_data();
 //planner.print_data("a");
