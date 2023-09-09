@@ -24,14 +24,13 @@
 */
 
 // Global variables
-var today = new Date();
-var selectedday = today;
+var selectedday = Date();
 const onehour = 3600000; // 1 hour in epoch milliseconds
 var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
 var show_starthour = thishour - (onehour * 11); // 11-hour before
 var show_endhour = thishour + (onehour * 12); // 12-hour after
 
-// Global variables - planner data
+// Global variables - planner data - try using object oriented class to make this closer to JQuery
 class plannerobj {
     constructor() {
         this.pdata = { "a": "b" };
@@ -70,7 +69,7 @@ class plannerobj {
         return true;
     }
     // Load data from localstorage
-    load_data () {
+    load_data() {
         let newdata = {};
         console.log("loading from storage");
         console.log(this.pdata);
@@ -90,6 +89,7 @@ class plannerobj {
 var planner = new plannerobj();
 
 
+// Define time blocks in html
 // <!--Example of a time block.The "present" class specifies background color.-->
 var time_block = $($.parseHTML('\
     <div class= "row time-block" > \
@@ -102,16 +102,22 @@ var time_block = $($.parseHTML('\
     '));
 
 
-// Display the current Day
-$("#currentDay").text(selectedday.toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    hour12: true,
-}));
+// Create a timer to display current date/time
+const timerID = setInterval(
+    function () {
+        // Display the current Day
+        $("#currentDay").text(Date().toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true,
+        }));
+    }, 1000 // update every second
+);
+
 
 // Build out schedule table for the day
 for (var i = show_starthour; i <= show_endhour; i += onehour) {
@@ -129,10 +135,13 @@ for (var i = show_starthour; i <= show_endhour; i += onehour) {
 
     if (i < thishour) {
         time_block.addClass("past");
+        time_block.children().eq(1).attr("id", "");
     } else if (i === thishour) {
         time_block.addClass("present");
+        time_block.children().eq(1).attr("id", "timenow");
     } else {
         time_block.addClass("future");
+        time_block.children().eq(1).attr("id", "");
     }
     time_block.children().eq(0).text(hourstring);
     time_block.children().eq(1).val(planner.get_data(i));
@@ -151,6 +160,22 @@ $("div.row.time-block > .saveBtn").on("click", function () {
 $("div.row.time-block > textarea").on("input", function () {
     console.log($(this).parent()[0].id);
     $(this).next().addClass("blink_me"); // content changed, apply blink to save button
+});
+
+// Search button is pressed
+$("#search").on("click", function () {
+    console.log("search for: ");
+    console.log($(this).prev().val());
+});
+
+// Up button is pressed
+$("up-one").on("click", function () {
+    console.log("up");
+});
+
+// Down button is pressed
+$("down-one").on("click", function () {
+    console.log("down");
 });
 
 //planner.print_data();

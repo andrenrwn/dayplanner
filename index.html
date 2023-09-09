@@ -16,11 +16,55 @@
 </head>
 
 <body>
-  <header class="p-5 mb-4">
-    <h1 class="display-3">Work Day Scheduler</h1>
-    <p class="lead">A simple calendar app for scheduling your work day</p>
-    <p id="currentDay" class="lead"></p>
+
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <button class="btn" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon">
+          <a class="navbar-brand" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-justify"
+              viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+            </svg>
+          </a>
+        </span>
+      </button>
+      <div class="collapse show" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item px-2">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item px-2">
+            <a class="nav-link" href="#timenow">Now</a>
+          </li>
+          <!-- bootstrap collapsible button -->
+          <li class="nav-item nav-link px-2" type="button" data-toggle="collapse" data-target="#collapseExample"
+            aria-expanded="false" aria-controls="collapseExample">
+            Select Date
+          </li>
+          <li class="nav-item px-2">
+            <a id="currentDay" class="nav-link"></a>
+          </li>
+          <div class="d-flex" role="search">
+            <input id="searchtext" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button id="search" class="btn btn-outline-success">Search</button>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="">
+    <div class="collapse p-2" id="collapseExample">
+      <div class="well">
+        <h1 class="display-3">Work Day Scheduler</h1>
+        <p class="lead">A simple calendar app for scheduling your work day</p>
+      </div>
+    </div>
   </header>
+
   <div class="container-fluid px-5">
     <!-- Use class for "past", "present", and "future" to apply styles to the
         time-block divs accordingly. The javascript will need to do this by
@@ -32,18 +76,14 @@
         code is implemented.
         -->
 
-    <div class="py-3">
-      <button class="btn btn-primary py-2" type="button" data-toggle="collapse" data-target="#collapseExample"
-        aria-expanded="false" aria-controls="collapseExample">
-        Select Date
-      </button>
-    </div>
-    <div class="collapse p-2" id="collapseExample">
-      <div class="well">
-        <p>Placeholder for day selector</p>
-      </div>
-    </div>
+    <!-- up button -->
+    <div id="up-one" class="d-flex justify-content-center btn" type="button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z"/>
+      </svg>
+    </button>
 
+    <!-- main container for hourly time blocks -->
     <main id="schedulelist">
       <!-- Example of a past time block. The "past" class adds a gray background color. -->
       <!--
@@ -76,6 +116,16 @@
       </div>
       -->
     </main>
+    <!-- down button -->
+    <button id="down-one" class="d-flex justify-content-center btn" type="button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z"/>
+      </svg>
+    </button>
+
+    <footer class="d-flex justify-content-center align-middle">
+      <p class="align-middle">UTA Full Stack</p>
+    </footer>
 
   </div>
 
