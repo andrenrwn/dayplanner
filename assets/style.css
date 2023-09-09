@@ -3,9 +3,16 @@
 Bootstrap calendar from https://colorlib.com/wp/template/calendar-07/
 */
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
+}
+
+#schedulelist {
 }
 
 textarea {
