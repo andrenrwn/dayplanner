@@ -28,7 +28,7 @@ var selectedday = Date();
 const onehour = 3600000; // 1 hour in epoch milliseconds
 var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
 var show_starthour = thishour - (onehour * 11); // 11-hour before
-var show_endhour = thishour + (onehour * 12); // 12-hour after
+var rows_to_display = 24; // show 24 hours of rows
 
 var fit_in_window = false;
 var show_min_rows = 3; // minimum number of rows to show in window, if we are following viewport height
@@ -133,7 +133,7 @@ function refreshclock() {
 
     // Re-render the table if we just turned the hour
     if ((d.getMinutes() + d.getSeconds()) < 2) {
-        display_table(show_starthour, show_endhour);
+        display_table(show_starthour, rows_to_display);
     }
 }
 
@@ -145,14 +145,15 @@ const timerID = setInterval(refreshclock, 1000); // update every second
 // ------------------
 
 // Build out schedule table for the day
-function display_table(starthour, endhour) {
+function display_table(starthour, numrows) {
     $("#schedulelist").empty(); // Clear all time blocks from the display
 
     // Add time blocks one by one
-    for (var i = starthour; i <= endhour; i += onehour) {
+    for (var i = 0; i < numrows; i++) {
+        time_i = starthour+(i*onehour);
         let d = new Date(0);
-        d.setUTCSeconds(i / 1000);
-        console.log(d, i / 1000);
+        d.setUTCSeconds(time_i / 1000);
+        console.log(d, time_i / 1000);
         let hourstring = d.toLocaleString('en-US', {
             hour: 'numeric',
             hour12: true,
@@ -160,18 +161,18 @@ function display_table(starthour, endhour) {
 
         // time_block.attr("id", "hour-" + hourstring.replace(/ /g, '')); // actually not useful
         // time_block.attr("data-epochr", i); // set the epoch hour as data key
-        time_block.attr("id", i); // set the ID to the epoch hour
+        time_block.attr("id", starthour+(i*onehour)); // set the ID to the epoch hour
 
         time_block.removeClass("past present future");
         time_block.remove("#timebar");
 
         time_block.children().eq(0).text(hourstring);
-        time_block.children().eq(1).val(planner.get_data(i));
+        time_block.children().eq(1).val(planner.get_data(time_i));
 
-        if (i < thishour) {
+        if (time_i < thishour) {
             time_block.addClass("past");
             time_block.children().eq(1).attr("id", "");
-        } else if (i === thishour) {
+        } else if (time_i === thishour) {
             time_block.addClass("present");
             time_block.children().eq(1).attr("id", "timenow");
             time_block.children().eq(0).prepend(time_bar);
@@ -181,7 +182,7 @@ function display_table(starthour, endhour) {
         }
 
         // Add a new row to display the date when this is 00 hours or the beginning of the table
-        if (d.getHours() === 0 || i === starthour) {
+        if (d.getHours() === 0 || i === 0) {
             let dayformat = new Intl.DateTimeFormat('default', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
             $("#schedulelist").append('<div class= "dayseparator row time-block" >' + dayformat.format(d) + '</div>');
         };
@@ -191,7 +192,7 @@ function display_table(starthour, endhour) {
 }
 
 // Render all elements before attaching JQuery events to it
-display_table(show_starthour, show_endhour);
+display_table(show_starthour, rows_to_display);
 
 // -----------------
 // Add jQuery Events
@@ -228,33 +229,28 @@ $("#search").on("click", function () {
 // Up one day button is pressed
 $("#up-day").on("click keyup", function () {
     show_starthour -= (onehour * 24);
-    show_endhour -= (onehour * 24);
-    display_table(show_starthour, show_endhour);
+    display_table(show_starthour, rows_to_display);
 });
 
 // Up one hour button is pressed
 $("#up-one").on("click keyup", function () {
     show_starthour -= onehour;
-    show_endhour -= onehour;
-    display_table(show_starthour, show_endhour);
+    display_table(show_starthour, rows_to_display);
 });
 
 // Down one hour button is pressed
 $("#down-one").on("click keyup", function () {
     show_starthour += onehour;
-    show_endhour += onehour;
-    display_table(show_starthour, show_endhour);
+    display_table(show_starthour, rows_to_display);
 });
 
 // Down one day button is pressed
 $("#down-day").on("click keyup", function () {
     show_starthour += (onehour * 24);
-    show_endhour += (onehour * 24);
-    display_table(show_starthour, show_endhour);
+    display_table(show_starthour, rows_to_display);
 });
 
 // Respond to window resizing
-
 function refresh_window() {
     if (fit_in_window) {
         let maxrows = Math.floor(($(window).height() -
@@ -265,9 +261,8 @@ function refresh_window() {
         if (maxrows < show_min_rows) {
             maxrows = show_min_rows;
         };
-        show_endhour = show_starthour + onehour*(maxrows-1);
         refreshclock();
-        display_table(show_starthour,show_endhour);
+        display_table(show_starthour,maxrows);
     };
 }
 
@@ -276,8 +271,5 @@ $(window).on("resize", refresh_window);
 $(".btn, #selectdaytoggle").on("click keyup", refresh_window);
 
 
+refreshclock(); // refresh the clock on page load
 
-refreshclock();
-
-//planner.print_data();
-//planner.get_data();
