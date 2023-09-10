@@ -2,11 +2,23 @@
 
 ## About
 
-This work day scheduler has the following requirements:
+This simple work day scheduler allows users to enter some text into an hourly time slot.
 
-- Functions as a daily planner to create a schedule
-- Opening the planner displays the current day at the top of the calendar
+It uses jQuery and Bootstrap to provide element formatting and navbar features.
+
+## Features
+
+- It can function as a daily planner or scheduler
+- The navbar shows the current day and time
 - Scrolling down shows future time blocks
+  Clicking the up/down buttons will skip an hour or a day into the previous/future time blocks.
 - Time blocks shows past, current hour, and future blocks in different colors
-- Clicking time blocks triggers a DOM event to edit text for that time block
-- Clicking on the "Save" button for that time block saves the data in local storage
+- Clicking time blocks allows editing text for that time block.
+  Modifying the text in that time block triggers a blinking save icon.
+- Clicking on the "Save" button for that time block saves the data in local storage, and the save icon will stop blinking.
+- Refreshing the window loads the text for each timeblock from local storage and redisplays them.
+
+TBD:
+- a calendar will be displayed to show/select the date/time
+- a day selector can be used to jump to a specific date
+
