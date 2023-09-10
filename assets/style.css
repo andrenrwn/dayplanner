@@ -63,6 +63,10 @@ textarea {
   border-top: 1px solid white;
 }
 
+.dayseparator {
+  background-image: linear-gradient(to bottom, rgb(255,255,255,0.5), rgb(192,192,192,0.5));
+}
+
 .hour {
   position: relative;
   background-color: #ffffff;

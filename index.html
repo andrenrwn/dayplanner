@@ -23,6 +23,7 @@
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon">
           <a class="navbar-brand" href="#">
+            <!-- bootstrap icon -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-justify"
               viewBox="0 0 16 16">
               <path fill-rule="evenodd"
@@ -73,11 +74,21 @@
     -->
 
     <!-- up button starts the display one hour before -->
+    <div id="up-day" class="scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
+      <!-- bootstrap icon double-chevron-up -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-up"
+        viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z" />
+        <path fill-rule="evenodd" d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z" />
+      </svg>
+    </div>
+
+    <!-- up button starts the display one hour before -->
     <div id="up-one" class="scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
+      <!-- bootstrap icon chevron-up -->
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
         class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
-        <path fill-rule="evenodd"
-          d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+        <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
       </svg>
     </div>
 
@@ -106,10 +117,20 @@
 
     <!-- down button starts the display one hour after -->
     <div id="down-one" class="scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
+      <!-- bootstrap icon chevron-down -->
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
         class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
-        <path fill-rule="evenodd"
-          d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+        <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+      </svg>
+    </div>
+
+    <!-- far down button starts the display one day after -->
+    <div id="down-day" class="scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
+      <!-- bootstrap icon chevron-down -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+        class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+        <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
       </svg>
     </div>
 

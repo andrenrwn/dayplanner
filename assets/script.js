@@ -102,13 +102,14 @@ var time_block = $($.parseHTML('\
     </div >\
     '));
 
+// The time bar is a div on the current hour time block
+var time_bar = $($.parseHTML('<div id="timebar">10:30</div>'));
+
 // -------------------------
 // Clock (present date/time)
 // -------------------------
 
-// The time bar is a div on the current hour time block
-var time_bar = $($.parseHTML('<div id="timebar">10:30</div>'));
-
+// Refresh the clock every second
 function refreshclock() {
     let d = new Date();
 
@@ -125,7 +126,12 @@ function refreshclock() {
 
     // Display the current time:seconds on the time bar in the current hour block
     $('#timebar').text(d.getMinutes() + ":" + d.getSeconds());
-    $('#timebar').height((d.getMinutes()*60+d.getSeconds())/36 + "%");
+    $('#timebar').height((d.getMinutes() * 60 + d.getSeconds()) / 36 + "%");
+
+    // Re-render the table if we just turned the hour
+    if ((d.getMinutes() + d.getSeconds()) < 2) {
+        display_table(show_starthour, show_endhour);
+    }
 }
 
 // Create a timer to display current date/time
@@ -171,6 +177,12 @@ function display_table(starthour, endhour) {
             time_block.children().eq(1).attr("id", "");
         }
 
+        // Add a new row to display the date when this is 00 hours or the beginning of the table
+        if (d.getHours() === 0 || i === starthour ) {
+            let dayformat = new Intl.DateTimeFormat('default', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            $("#schedulelist").append('<div class= "dayseparator row time-block" >' + dayformat.format(d) + '</div>');
+        };
+
         time_block.clone().appendTo("#schedulelist");
     }
 }
@@ -210,19 +222,34 @@ $("#search").on("click", function () {
     console.log($(this).prev().val());
 });
 
-// Up button is pressed
+// Up one day button is pressed
+$("#up-day").on("click keyup", function () {
+    show_starthour -= (onehour*24);
+    show_endhour -= (onehour*24);
+    display_table(show_starthour, show_endhour);
+});
+
+// Up one hour button is pressed
 $("#up-one").on("click keyup", function () {
     show_starthour -= onehour;
     show_endhour -= onehour;
     display_table(show_starthour, show_endhour);
 });
 
-// Down button is pressed
+// Down one hour button is pressed
 $("#down-one").on("click keyup", function () {
     show_starthour += onehour;
     show_endhour += onehour;
     display_table(show_starthour, show_endhour);
 });
+
+// Down one day button is pressed
+$("#down-day").on("click keyup", function () {
+    show_starthour += (onehour*24);
+    show_endhour += (onehour*24);
+    display_table(show_starthour, show_endhour);
+});
+
 
 refreshclock();
 
