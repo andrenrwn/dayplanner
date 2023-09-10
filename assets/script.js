@@ -30,6 +30,9 @@ var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data 
 var show_starthour = thishour - (onehour * 11); // 11-hour before
 var show_endhour = thishour + (onehour * 12); // 12-hour after
 
+var fit_in_window = false;
+var show_min_rows = 3; // minimum number of rows to show in window, if we are following viewport height
+
 // Global variables - planner data - try using object oriented class to make this closer to JQuery
 class plannerobj {
     constructor() {
@@ -103,7 +106,7 @@ var time_block = $($.parseHTML('\
     '));
 
 // The time bar is a div on the current hour time block
-var time_bar = $($.parseHTML('<div id="timebar">10:30</div>'));
+var time_bar = $($.parseHTML('<div id="timebar"></div>'));
 
 // -------------------------
 // Clock (present date/time)
@@ -178,7 +181,7 @@ function display_table(starthour, endhour) {
         }
 
         // Add a new row to display the date when this is 00 hours or the beginning of the table
-        if (d.getHours() === 0 || i === starthour ) {
+        if (d.getHours() === 0 || i === starthour) {
             let dayformat = new Intl.DateTimeFormat('default', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
             $("#schedulelist").append('<div class= "dayseparator row time-block" >' + dayformat.format(d) + '</div>');
         };
@@ -224,8 +227,8 @@ $("#search").on("click", function () {
 
 // Up one day button is pressed
 $("#up-day").on("click keyup", function () {
-    show_starthour -= (onehour*24);
-    show_endhour -= (onehour*24);
+    show_starthour -= (onehour * 24);
+    show_endhour -= (onehour * 24);
     display_table(show_starthour, show_endhour);
 });
 
@@ -245,10 +248,33 @@ $("#down-one").on("click keyup", function () {
 
 // Down one day button is pressed
 $("#down-day").on("click keyup", function () {
-    show_starthour += (onehour*24);
-    show_endhour += (onehour*24);
+    show_starthour += (onehour * 24);
+    show_endhour += (onehour * 24);
     display_table(show_starthour, show_endhour);
 });
+
+// Respond to window resizing
+
+function refresh_window() {
+    if (fit_in_window) {
+        let maxrows = Math.floor(($(window).height() -
+            $('#schedulelist')[0].getBoundingClientRect().top -
+            ($('.dayseparator').height() * 5)) /
+            $('.time-block').not('.dayseparator').height());
+        console.log("enough for " + maxrows);
+        if (maxrows < show_min_rows) {
+            maxrows = show_min_rows;
+        };
+        show_endhour = show_starthour + onehour*(maxrows-1);
+        refreshclock();
+        display_table(show_starthour,show_endhour);
+    };
+}
+
+// Only have enough rows to fit viewport when window is resized
+$(window).on("resize", refresh_window);
+$(".btn, #selectdaytoggle").on("click keyup", refresh_window);
+
 
 
 refreshclock();
