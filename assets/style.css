@@ -130,7 +130,7 @@ h1.head-day {
   align-items: center;
 }
 
-#collapseExample>div>div:nth-child(1) {
+.calendarface>div:nth-child(1) {
   padding-left: 5px;
   padding-top: 5px;
   padding-bottom: 5px;

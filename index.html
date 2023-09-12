@@ -30,8 +30,10 @@
   <!-- nav bar -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <button class="btn" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+      <!-- Button to collapse UI and calendary date selector -->
+      <button class="btn" type="button" data-toggle="collapse" data-target=".multi-collapse"
+        aria-controls="navbarSupportedContent collapseDaySelector" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon">
           <a class="navbar-brand" href="#">
             <!-- bootstrap icon - menu -->
@@ -44,7 +46,7 @@
         </span>
       </button>
       <!-- nav bar items  -->
-      <div class="collapse show" id="navbarSupportedContent">
+      <div class="collapse show multi-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <!-- home  -->
           <li class="nav-item px-2">
@@ -56,8 +58,8 @@
           </li>
           <!-- bootstrap collapsible button -->
           <li id="selectdaytoggle" class="nav-item nav-link px-2" type="button" data-toggle="collapse"
-            data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" tabindex="0">
-            Select Date
+            data-target="#collapseDaySelector" aria-expanded="false" aria-controls="collapseDaySelector" tabindex="0">
+            Select Day
           </li>
           <!-- full date/time clock  -->
           <li class="nav-item px-2">
@@ -65,11 +67,12 @@
               Sun Jan 1 2023 00:00:00 GMT+0000 (Greenwich Mean Time)
             </a>
           </li>
-          <!-- search  -->
+          <!-- search (TBD)
           <div class="d-flex" role="search">
             <input id="searchtext" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button id="search" class="btn btn-outline-success">Search</button>
           </div>
+           -->
         </ul>
       </div>
     </div>
@@ -78,7 +81,7 @@
   <header class="">
     <!-- collapsible section  -->
 
-    <div class="collapse show justify-content-center" id="collapseExample">
+    <div class="collapse show multi-collapse justify-content-center" id="collapseDaySelector">
 
       <!-- a calendar to select a date for our planner -->
       <div class="calendarface">

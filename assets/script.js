@@ -27,9 +27,9 @@
 var selectedday = Date();
 const onehour = 3600000; // 1 hour in epoch milliseconds
 var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
-var rows_to_display = 24; // show 24 hours of rows
+var rows_to_display = 12; // show how many hours in a day
 //var show_starthour = Math.floor(selectedday / onehour) * onehour - (Math.floor(rows_to_display/2) * onehour); // 11-hour before
-var show_starthour = thishour - (onehour * 11); // 11-hour before
+var show_starthour = thishour - (onehour * 2); // (onehour * Math.floor(rows_to_display/2)); // past hours to display
 var fit_in_window = false;
 var show_min_rows = 3; // minimum number of rows to show in window, if we are following viewport height
 
@@ -39,7 +39,7 @@ var myjsCalendar = jsCalendar.new('#mydateselector', selectedday.toDateString);
 // Global variables - planner data - try using object oriented class to make this closer to JQuery
 class plannerobj {
     constructor() {
-        this.pdata = { "a": "b" };
+        this.pdata = {}; // { "a": "b" };
         this.storagekey = "dayplannerdata";
         this.load_data();
     }
@@ -66,9 +66,9 @@ class plannerobj {
     // Store data in memory
     set_data(key, content) {
         if (key === undefined) {
-            //console.log(this.pdata);
+            console.log("set data ", this.pdata);
         } else {
-            //console.log("Overwriting " + this.pdata[key] + " on key " + key + " with " + content);
+            console.log("set data overwriting " + this.pdata[key] + " on key " + key + " with " + content);
             this.pdata[key] = content;
         }
         this.store_data();
@@ -81,12 +81,12 @@ class plannerobj {
         //console.log(this.pdata);
         newdata = JSON.parse(localStorage.getItem(this.storagekey));
         Object.assign(this.pdata, newdata); // merge data from storage
-        //console.log(this.pdata);
+        console.log("merged from storage: ", this.pdata);
     }
     // Store data to localstorage
     store_data() {
-        //console.log("saving to storage");
-        //console.log(this.pdata);
+        console.log("saving to storage");
+        console.log(this.pdata);
         localStorage.setItem(this.storagekey, JSON.stringify(this.pdata));
         return true;
     }
@@ -274,7 +274,7 @@ myjsCalendar.onDateClick(function (event, clickeddate) {
     selectedday = clickeddate;
     thishour = Math.floor(new Date() / onehour) * onehour; // data in hourly blocks
     let selectedhour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
-    show_starthour = selectedhour - (onehour * 11); // 11-hour before
+    show_starthour = selectedhour; // - (onehour * Math.floor(rows_to_display/2)); // display at the start of the day
     display_table(show_starthour, rows_to_display);
     //console.log("selected ", clickeddate.toString());
 });
