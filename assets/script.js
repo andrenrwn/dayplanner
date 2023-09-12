@@ -27,11 +27,14 @@
 var selectedday = Date();
 const onehour = 3600000; // 1 hour in epoch milliseconds
 var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
-var show_starthour = thishour - (onehour * 11); // 11-hour before
 var rows_to_display = 24; // show 24 hours of rows
-
-var fit_in_window = true;
+//var show_starthour = Math.floor(selectedday / onehour) * onehour - (Math.floor(rows_to_display/2) * onehour); // 11-hour before
+var show_starthour = thishour - (onehour * 11); // 11-hour before
+var fit_in_window = false;
 var show_min_rows = 3; // minimum number of rows to show in window, if we are following viewport height
+
+// Use jsCalendar as the date selector
+var myjsCalendar = jsCalendar.new('#mydateselector', selectedday.toDateString);
 
 // Global variables - planner data - try using object oriented class to make this closer to JQuery
 class plannerobj {
@@ -44,28 +47,28 @@ class plannerobj {
     //data: {},
     print_data(key) {
         if (key === undefined) {
-            console.log(this.pdata);
+            //console.log(this.pdata);
         } else {
-            console.log(this.pdata[key]);
+            //console.log(this.pdata[key]);
         }
         return true;
     }
     // Get data from localstorage
     get_data(key) {
         if (key === undefined) {
-            console.log(this.pdata);
+            //console.log(this.pdata);
             return this.pdata;
         } else {
-            console.log(this.pdata[key]);
+            //console.log(this.pdata[key]);
             return this.pdata[key];
         }
     }
     // Store data in memory
     set_data(key, content) {
         if (key === undefined) {
-            console.log(this.pdata);
+            //console.log(this.pdata);
         } else {
-            console.log("Overwriting " + this.pdata[key] + " on key " + key + " with " + content);
+            //console.log("Overwriting " + this.pdata[key] + " on key " + key + " with " + content);
             this.pdata[key] = content;
         }
         this.store_data();
@@ -74,16 +77,16 @@ class plannerobj {
     // Load data from localstorage
     load_data() {
         let newdata = {};
-        console.log("loading from storage");
-        console.log(this.pdata);
+        //console.log("loading from storage");
+        //console.log(this.pdata);
         newdata = JSON.parse(localStorage.getItem(this.storagekey));
         Object.assign(this.pdata, newdata); // merge data from storage
-        console.log(this.pdata);
+        //console.log(this.pdata);
     }
     // Store data to localstorage
     store_data() {
-        console.log("saving to storage");
-        console.log(this.pdata);
+        //console.log("saving to storage");
+        //console.log(this.pdata);
         localStorage.setItem(this.storagekey, JSON.stringify(this.pdata));
         return true;
     }
@@ -105,7 +108,7 @@ var time_block = $($.parseHTML('\
     </div >\
     '));
 
-// The time bar is a div on the current hour time block
+// The time bar displays the current hour on today's time block
 var time_bar = $($.parseHTML('<div id="timebar"></div>'));
 
 // -------------------------
@@ -117,7 +120,7 @@ function refreshclock() {
     let d = new Date();
 
     // Display the current Day on top clock
-    $('#currentDay').text(Date().toLocaleString('en-US', {
+    $('#currentDay').text(d.toLocaleString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -127,9 +130,15 @@ function refreshclock() {
         hour12: true,
     }));
 
+    // Display the current Day on the main calendar
+    $('#select-day').text(d.getDate());
+    $('#select-month-year').text(d.toLocaleDateString('en-EN', { year: 'numeric', month: 'long' }));
+
     // Display the current time:seconds on the time bar in the current hour block
     $('#timebar').text(d.getMinutes() + ":" + d.getSeconds());
     $('#timebar').height((d.getMinutes() * 60 + d.getSeconds()) / 36 + "%");
+
+    thishour = Math.floor(new Date() / onehour) * onehour; // update thishour
 
     // Re-render the table if we just turned the hour
     if ((d.getMinutes() + d.getSeconds()) < 2) {
@@ -144,16 +153,16 @@ const timerID = setInterval(refreshclock, 1000); // update every second
 // Render day planner
 // ------------------
 
-// Build out schedule table for the day
+// Build out (render) schedule table for the day
 function display_table(starthour, numrows) {
     $("#schedulelist").empty(); // Clear all time blocks from the display
 
     // Add time blocks one by one
     for (var i = 0; i < numrows; i++) {
-        time_i = starthour+(i*onehour);
+        time_i = starthour + (i * onehour);
         let d = new Date(0);
         d.setUTCSeconds(time_i / 1000);
-        console.log(d, time_i / 1000);
+        //console.log("TIMEBLOCK: ", d, ":", selectedday, time_i, thishour, time_i===thishour);
         let hourstring = d.toLocaleString('en-US', {
             hour: 'numeric',
             hour12: true,
@@ -161,7 +170,7 @@ function display_table(starthour, numrows) {
 
         // time_block.attr("id", "hour-" + hourstring.replace(/ /g, '')); // actually not useful
         // time_block.attr("data-epochr", i); // set the epoch hour as data key
-        time_block.attr("id", starthour+(i*onehour)); // set the ID to the epoch hour
+        time_block.attr("id", starthour + (i * onehour)); // set the ID to the epoch hour
 
         time_block.removeClass("past present future");
         time_block.remove("#timebar");
@@ -183,8 +192,15 @@ function display_table(starthour, numrows) {
 
         // Add a new row to display the date when this is 00 hours or the beginning of the table
         if (d.getHours() === 0 || i === 0) {
-            let dayformat = new Intl.DateTimeFormat('default', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-            $("#schedulelist").append('<div class= "dayseparator row time-block" >' + dayformat.format(d) + '</div>');
+            //let dayformat = new Intl.DateTimeFormat('default', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            let dayformat = new Date(time_i).toLocaleString('en-US', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            //console.log("DAYFORMAT: ", dayformat);
+            $("#schedulelist").append('<div class= "dayseparator row time-block" >' + dayformat + '</div>');
         };
 
         time_block.clone().appendTo("#schedulelist");
@@ -250,26 +266,42 @@ $("#down-day").on("click keyup", function () {
     display_table(show_starthour, rows_to_display);
 });
 
-// Respond to window resizing
+// jsCalendar event - when user clicks on a selected date (and refresh the current hour)
+myjsCalendar.onDateClick(function (event, clickeddate) {
+    //this.set(clickedate);
+    this.clearselect();
+    this.select(clickeddate);
+    selectedday = clickeddate;
+    thishour = Math.floor(new Date() / onehour) * onehour; // data in hourly blocks
+    let selectedhour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
+    show_starthour = selectedhour - (onehour * 11); // 11-hour before
+    display_table(show_starthour, rows_to_display);
+    //console.log("selected ", clickeddate.toString());
+});
+
+
+// Respond to window resizing --- TODO: dynamically resize planner layout to viewport
 function refresh_window() {
     if (fit_in_window) {
         let maxrows = Math.floor(($(window).height() -
             $('#schedulelist')[0].getBoundingClientRect().top -
             ($('.dayseparator').height() * 5)) /
             $('.time-block').not('.dayseparator').height());
-        console.log("enough for " + maxrows);
+        //console.log("enough for " + maxrows);
         if (maxrows < show_min_rows) {
             maxrows = show_min_rows;
         };
         refreshclock();
-        display_table(show_starthour,maxrows);
+        display_table(show_starthour, maxrows);
     };
 }
 
 // Only have enough rows to fit viewport when window is resized
 $(window).on("resize", refresh_window);
+
+// collapse / show calendar day selector
 $(".btn, #selectdaytoggle").on("hidden.bs.collapse shown.bs.collapse", refresh_window);
 
-
-refreshclock(); // refresh the clock on page load
+// refresh the clock on page load
+refreshclock();
 

@@ -26,13 +26,15 @@
 </head>
 
 <body>
+
+  <!-- nav bar -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <button class="btn" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon">
           <a class="navbar-brand" href="#">
-            <!-- bootstrap icon -->
+            <!-- bootstrap icon - menu -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-justify"
               viewBox="0 0 16 16">
               <path fill-rule="evenodd"
@@ -41,11 +43,14 @@
           </a>
         </span>
       </button>
+      <!-- nav bar items  -->
       <div class="collapse show" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <!-- home  -->
           <li class="nav-item px-2">
             <a class="nav-link" aria-current="page" href="#">Home</a>
           </li>
+          <!-- scroll to the current hour  -->
           <li class="nav-item px-2">
             <a class="nav-link" href="#timenow">Now</a>
           </li>
@@ -54,11 +59,13 @@
             data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" tabindex="0">
             Select Date
           </li>
+          <!-- full date/time clock  -->
           <li class="nav-item px-2">
             <a id="currentDay" class="nav-link">
               Sun Jan 1 2023 00:00:00 GMT+0000 (Greenwich Mean Time)
             </a>
           </li>
+          <!-- search  -->
           <div class="d-flex" role="search">
             <input id="searchtext" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button id="search" class="btn btn-outline-success">Search</button>
@@ -69,17 +76,33 @@
   </nav>
 
   <header class="">
-    <div class="collapse d-flex p-2" id="collapseExample">
+    <!-- collapsible section  -->
 
-      <img src="http://placekitten.com/200/300" />
+    <div class="collapse show justify-content-center" id="collapseExample">
 
-      <!-- jsCalendar docs https://gramthanos.github.io/jsCalendar/docs.html -->
-      <!-- Calendar Element -->
-      <div class="auto-jsCalendar material-theme"></div>
+      <!-- a calendar to select a date for our planner -->
+      <div class="calendarface">
+        <!-- display selected day -->
+        <div class="fill align-items-center">
+          <header class="select-now">
+            <h1 id="select-day">25</h1>
+            <p id="select-month-year">September · 2023</p>
+          </header>
+          <!-- calendar image - use the img src if the background-image css doesn't work -->
+          <section>
+            <!--<img src="http://placekitten.com/200/300" alt="a calendar kitten" />-->
+          </section>
+        </div>
+        <div class="fill">
+          <!-- jsCalendar docs https://gramthanos.github.io/jsCalendar/docs.html -->
+          <!-- Calendar Element -->
+          <div id="mydateselector" data-date="now" class="custom-color material-theme">
+            <div></div>
+          </div>
+        </div>
+      </div>
 
     </div> <!-- end of collapsible calendar section -->
-
-
   </header>
 
   <div class="container-fluid px-5">
