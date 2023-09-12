@@ -30,7 +30,7 @@ var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data 
 var show_starthour = thishour - (onehour * 11); // 11-hour before
 var rows_to_display = 24; // show 24 hours of rows
 
-var fit_in_window = true;
+var fit_in_window = false;
 var show_min_rows = 3; // minimum number of rows to show in window, if we are following viewport height
 
 // Global variables - planner data - try using object oriented class to make this closer to JQuery
