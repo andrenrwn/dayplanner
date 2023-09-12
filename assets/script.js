@@ -28,7 +28,8 @@ var selectedday = Date();
 const onehour = 3600000; // 1 hour in epoch milliseconds
 var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
 var rows_to_display = 24; // show 24 hours of rows
-var show_starthour = thishour - (onehour * Math.floor(rows_to_display/2)); // 11-hour before
+//var show_starthour = Math.floor(selectedday / onehour) * onehour - (Math.floor(rows_to_display/2) * onehour); // 11-hour before
+var show_starthour = thishour - (onehour * 11); // 11-hour before
 var fit_in_window = false;
 var show_min_rows = 3; // minimum number of rows to show in window, if we are following viewport height
 
@@ -137,7 +138,7 @@ function refreshclock() {
     $('#timebar').text(d.getMinutes() + ":" + d.getSeconds());
     $('#timebar').height((d.getMinutes() * 60 + d.getSeconds()) / 36 + "%");
 
-    thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // update thishour
+    thishour = Math.floor(new Date() / onehour) * onehour; // update thishour
 
     // Re-render the table if we just turned the hour
     if ((d.getMinutes() + d.getSeconds()) < 2) {
@@ -161,7 +162,7 @@ function display_table(starthour, numrows) {
         time_i = starthour + (i * onehour);
         let d = new Date(0);
         d.setUTCSeconds(time_i / 1000);
-        //console.log(d, time_i / 1000);
+        //console.log("TIMEBLOCK: ", d, ":", selectedday, time_i, thishour, time_i===thishour);
         let hourstring = d.toLocaleString('en-US', {
             hour: 'numeric',
             hour12: true,
@@ -191,8 +192,15 @@ function display_table(starthour, numrows) {
 
         // Add a new row to display the date when this is 00 hours or the beginning of the table
         if (d.getHours() === 0 || i === 0) {
-            let dayformat = new Intl.DateTimeFormat('default', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-            $("#schedulelist").append('<div class= "dayseparator row time-block" >' + dayformat.format(d) + '</div>');
+            //let dayformat = new Intl.DateTimeFormat('default', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            let dayformat = new Date(time_i).toLocaleString('en-US', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            //console.log("DAYFORMAT: ", dayformat);
+            $("#schedulelist").append('<div class= "dayseparator row time-block" >' + dayformat + '</div>');
         };
 
         time_block.clone().appendTo("#schedulelist");
@@ -258,16 +266,17 @@ $("#down-day").on("click keyup", function () {
     display_table(show_starthour, rows_to_display);
 });
 
-// jsCalendar event - when user clicks on a selected date
-myjsCalendar.onDateClick(function (event, clickedate) {
+// jsCalendar event - when user clicks on a selected date (and refresh the current hour)
+myjsCalendar.onDateClick(function (event, clickeddate) {
     //this.set(clickedate);
     this.clearselect();
-    this.select(clickedate);
-    selectedday = clickedate;
-    thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
-    show_starthour = thishour - (onehour * 11); // 11-hour before
+    this.select(clickeddate);
+    selectedday = clickeddate;
+    thishour = Math.floor(new Date() / onehour) * onehour; // data in hourly blocks
+    let selectedhour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
+    show_starthour = selectedhour - (onehour * 11); // 11-hour before
     display_table(show_starthour, rows_to_display);
-    console.log("selected ", clickedate.toString());
+    //console.log("selected ", clickeddate.toString());
 });
 
 
@@ -278,7 +287,7 @@ function refresh_window() {
             $('#schedulelist')[0].getBoundingClientRect().top -
             ($('.dayseparator').height() * 5)) /
             $('.time-block').not('.dayseparator').height());
-        console.log("enough for " + maxrows);
+        //console.log("enough for " + maxrows);
         if (maxrows < show_min_rows) {
             maxrows = show_min_rows;
         };
