@@ -35,31 +35,35 @@
       <button class="btn" type="button" data-toggle="collapse" data-target=".multi-collapse"
         aria-controls="navbarSupportedContent collapseDaySelector" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon">
-          <a class="navbar-brand" href="#">
+          <p class="navbar-brand" href="#">
             <!-- bootstrap icon - menu -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-justify"
               viewBox="0 0 16 16">
               <path fill-rule="evenodd"
                 d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
             </svg>
-          </a>
+          </p>
         </span>
       </button>
       <!-- nav bar items  -->
       <div class="collapse show multi-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <!-- home  -->
+          <!-- home 
           <li class="nav-item px-2">
             <a class="nav-link" aria-current="page" href="#">Home</a>
           </li>
+           -->
+          <li id="selecttoday" class="nav-item nav-link px-2" type="button" tabindex="0">
+            Go to Today
+          </li>
           <!-- scroll to the current hour  -->
           <li class="nav-item px-2">
-            <a class="nav-link" href="#timenow">Now</a>
+            <a class="nav-link" href="#timenow">Scroll To This Hour</a>
           </li>
           <!-- bootstrap collapsible button -->
           <li id="selectdaytoggle" class="nav-item nav-link px-2" type="button" data-toggle="collapse"
             data-target="#collapseDaySelector" aria-expanded="false" aria-controls="collapseDaySelector" tabindex="0">
-            Select Day
+            Toggle Day Selector
           </li>
           <!-- full date/time clock  -->
           <li class="nav-item px-2">

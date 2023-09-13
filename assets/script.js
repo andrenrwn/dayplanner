@@ -27,9 +27,25 @@
 var selectedday = Date();
 const onehour = 3600000; // 1 hour in epoch milliseconds
 var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
-var rows_to_display = 12; // show how many hours in a day
-//var show_starthour = Math.floor(selectedday / onehour) * onehour - (Math.floor(rows_to_display/2) * onehour); // 11-hour before
-var show_starthour = thishour - (onehour * 2); // (onehour * Math.floor(rows_to_display/2)); // past hours to display
+var rows_to_display = 9; // show how many hours in a day
+
+function getbaseday(day) {
+    console.log("getbaseday: ", day);
+    var d = new Date(day);
+    d.setHours(0);
+    d.setMinutes(0);
+    d.setSeconds(0);
+    d.setMilliseconds(0);
+    console.log("getbaseday to: ", Date.parse(d));
+    return Date.parse(d);
+}
+
+// show_starthour specifies the start of the hour to display
+//var show_starthour = thishour - (onehour * 2); // display two hours to this hour
+//var show_starthour = thishour - (onehour * Math.floor(rows_to_display/2) + 1); // show this hour in the middle
+//var show_starthour = Math.floor(selectedday / onehour) * onehour - (Math.floor(rows_to_display/2) * onehour); // 11-hour before this hour
+var show_starthour = getbaseday(selectedday) + (onehour * 9); // start from 9am
+
 var fit_in_window = false;
 var show_min_rows = 3; // minimum number of rows to show in window, if we are following viewport height
 
@@ -214,8 +230,37 @@ display_table(show_starthour, rows_to_display);
 // Add jQuery Events
 // -----------------
 
+// Navbar - pressing enter should also toggle bootstrap collapsible button
+$("#selectdaytoggle").keyup(function (event) {
+    console.log("keypress on collapse button");
+    if (event.keyCode === 13) {
+        $("#selectdaytoggle").click();
+    }
+});
+
+// Select today's date on both day selector and day planner
+$("#selecttoday").on("click keyup", function () {
+    selectedday = Date();
+    myjsCalendar.clearselect();
+    myjsCalendar.set(new Date());
+    myjsCalendar.refresh();
+    thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
+    //show_starthour = thishour - onehour; // (onehour * Math.floor(rows_to_display/2)); // past hours to display
+    show_starthour = getbaseday(selectedday) + (onehour * 9); // start from 9am
+    display_table(show_starthour, rows_to_display);
+});
+
+// Navbar - Search button is pressed
+/*
+$("#search").on("click", function () {
+    console.log("search for: ");
+    console.log($(this).prev().val());
+});
+*/
+
+
 // Save button is clicked, unblink the save icon
-$("div.row.time-block > .saveBtn").on("click", function () {
+$("div.row.time-block > .saveBtn").on("click keyup", function () {
     //console.log($(this).parent()[0].id);
     //console.log($(this).prev().val());
     planner.set_data($(this).parent()[0].id, $(this).prev().val());
@@ -228,19 +273,8 @@ $("div.row.time-block > textarea").on("input", function () {
     $(this).next().addClass("blink_me"); // content changed, apply blink to save button
 });
 
-// Navbar - pressing enter should also toggle bootstrap collapsible button
-$("#selectdaytoggle").keyup(function (event) {
-    console.log("keypress on collapse button");
-    if (event.keyCode === 13) {
-        $("#selectdaytoggle").click();
-    }
-});
 
-// Navbar - Search button is pressed
-$("#search").on("click", function () {
-    console.log("search for: ");
-    console.log($(this).prev().val());
-});
+// Navigation around the day planner
 
 // Up one day button is pressed
 $("#up-day").on("click keyup", function () {
@@ -273,8 +307,9 @@ myjsCalendar.onDateClick(function (event, clickeddate) {
     this.select(clickeddate);
     selectedday = clickeddate;
     thishour = Math.floor(new Date() / onehour) * onehour; // data in hourly blocks
-    let selectedhour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
-    show_starthour = selectedhour; // - (onehour * Math.floor(rows_to_display/2)); // display at the start of the day
+    // let selectedhour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
+    show_starthour = getbaseday(selectedday) + (onehour * 9); // start from 9am
+    //show_starthour = selectedhour; // - (onehour * Math.floor(rows_to_display/2)); // display at the start of the day
     display_table(show_starthour, rows_to_display);
     //console.log("selected ", clickeddate.toString());
 });
