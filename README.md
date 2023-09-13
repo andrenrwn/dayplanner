@@ -4,8 +4,6 @@
 
 This simple work day scheduler allows users to enter some text into an hourly time slot.
 
-It uses jQuery and Bootstrap to provide element formatting and navbar features.
-
 ## Features
 
 - It can function as a daily planner or scheduler
@@ -22,3 +20,9 @@ TBD:
 - a calendar will be displayed to show/select the date/time
 - a day selector can be used to jump to a specific date
 
+
+## Compoments & Credits
+
+[jQuery](https://jquery.com/)
+[Bootstrap](https://getbootstrap.com/) - UI, formatting and navbar
+[jsCalendar](https://gramthanos.github.io/jsCalendar/docs.html) - Date selector

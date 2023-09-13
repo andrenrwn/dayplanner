@@ -250,6 +250,23 @@ $("#selecttoday").on("click keyup", function () {
     display_table(show_starthour, rows_to_display);
 });
 
+// Let the user specify how many rows of hours to display
+$("#numhoursdisplay").on('input', function () {
+    var val = this.value;
+    if (Number.isInteger(Number.parseInt(val))) {
+        if (val < 3) {
+            val = 3;
+        } else if (val > 24) {
+            val = 24;
+        }
+    } else {
+        val = 9;
+    }
+    $("#numhoursdisplay").val(val);
+    rows_to_display = val;    
+    display_table(show_starthour, rows_to_display);
+});
+
 // Navbar - Search button is pressed
 /*
 $("#search").on("click", function () {

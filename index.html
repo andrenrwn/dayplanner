@@ -65,6 +65,16 @@
             data-target="#collapseDaySelector" aria-expanded="false" aria-controls="collapseDaySelector" tabindex="0">
             Toggle Day Selector
           </li>
+          <!-- bootstrap datalist input, select num hours to display -->
+
+          <input id="numhoursdisplay" class="nav-item nav-link px-2" list="datalistOptions" placeholder="Hours to display" onfocus="this.value=''" onchange="this.blur();">
+          <datalist id="datalistOptions">
+            <option value="3">
+            <option value="6">
+            <option value="9">
+            <option value="12">
+            <option value="24">
+          </datalist>
           <!-- full date/time clock  -->
           <li class="nav-item px-2">
             <a id="currentDay" class="nav-link">
