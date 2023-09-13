@@ -23,9 +23,9 @@
 });
 */
 
-// Global variables
-var now = dayjs();
+$(function () {
 
+// Global variables
 var selectedday = Date();
 const onehour = 3600000; // 1 hour in epoch milliseconds
 var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
@@ -40,7 +40,7 @@ function getbaseday(day) {
     return Date.parse(d);
 }
 
-// show_starthour specifies the start of the hour to display
+// different show_starthour methods specifies the start of the hour to display
 //var show_starthour = thishour - (onehour * 2); // display two hours to this hour
 //var show_starthour = thishour - (onehour * Math.floor(rows_to_display/2) + 1); // show this hour in the middle
 //var show_starthour = Math.floor(selectedday / onehour) * onehour - (Math.floor(rows_to_display/2) * onehour); // 11-hour before this hour
@@ -134,6 +134,21 @@ var time_bar = $($.parseHTML('<div id="timebar"></div>'));
 
 // Refresh the clock every second
 function refreshclock() {
+    let djs = dayjs();
+
+    // Display the current Day on top clock
+    $('#currentDay').text(djs.format('D MMMM YYYY hh:mm:ss A'));
+
+    // Display the current Day on the main calendar (right of the day selector)
+    $('#select-day').text(djs.$D);
+    $('#select-month-year').text(djs.format('MMMM · YYYY'));
+    $('#calendarfaceclock').text(djs.format('hh:mm:ss a'));
+
+    // Display the current time:seconds on the time bar in the current hour block
+    $('#timebar').text(djs.$m + ":" + djs.$s);
+    $('#timebar').height(Math.floor((djs.$m * 60 + djs.$s) / 36) + "%");
+
+    /* Uncomment for implementation without day.js *****
     let d = new Date();
 
     // Display the current Day on top clock
@@ -161,10 +176,11 @@ function refreshclock() {
     if ((d.getMinutes() + d.getSeconds()) < 2) {
         display_table(show_starthour, rows_to_display);
     }
+    /***** /Uncomment for implementation without day.js */
 }
 
 // Create a timer to display current date/time
-const timerID = setInterval(refreshclock, 1000); // update every second
+const timerID = setInterval(refreshclock, 200); // update 5 times a second
 
 // ------------------
 // Render day planner
@@ -233,7 +249,10 @@ display_table(show_starthour, rows_to_display);
 // Add jQuery Events
 // -----------------
 
-// Navbar - pressing enter should also toggle bootstrap collapsible button
+// -------------
+// Navbar events
+
+// Pressing enter on logo icon should toggle collapsibles
 $("#selectdaytoggle").keyup(function (event) {
     console.log("keypress on collapse button");
     if (event.keyCode === 13) {
@@ -242,20 +261,34 @@ $("#selectdaytoggle").keyup(function (event) {
 });
 
 // Select today's date on both day selector and day planner
-$("#selecttoday").on("click keyup", function () {
-    selectedday = Date();
-    myjsCalendar.clearselect();
-    myjsCalendar.set(new Date());
-    myjsCalendar.refresh();
-    thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
-    //show_starthour = thishour - onehour; // (onehour * Math.floor(rows_to_display/2)); // past hours to display
-    show_starthour = getbaseday(selectedday) + (onehour * 9); // start from 9am
-    display_table(show_starthour, rows_to_display);
+$("#gototoday").on("click keyup", function (event) {
+    if (event.type == "click" || (event.type === "keyup" && event.keyCode === 13)) {
+        selectedday = Date();
+        myjsCalendar.clearselect();
+        myjsCalendar.set(new Date());
+        myjsCalendar.refresh();
+        thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
+        //show_starthour = thishour - onehour; // (onehour * Math.floor(rows_to_display/2)); // past hours to display
+        show_starthour = getbaseday(selectedday) + (onehour * 9); // start from 9am
+        display_table(show_starthour, rows_to_display);
+    };
 });
 
 // Scroll to this hour
-
-
+$("#gotothishour").on("click keyup", function (event) {
+    event.preventDefault(); // use Javascript to scroll since element is a href
+    if (event.type == "click" || (event.type === "keyup" && event.keyCode === 13)) {
+        selectedday = Date();
+        myjsCalendar.clearselect();
+        myjsCalendar.set(new Date());
+        myjsCalendar.refresh();
+        thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
+        //show_starthour = thishour - onehour; // (onehour * Math.floor(rows_to_display/2)); // past hours to display
+        show_starthour = thishour - onehour; // start display from the previous hour
+        display_table(show_starthour, rows_to_display);
+        document.getElementById("timenow").scrollIntoView({ behavior: "smooth" });
+    }
+});
 
 // Let the user specify how many rows of hours to display
 $("#numhoursdisplay").on('input', function () {
@@ -282,28 +315,32 @@ $("#search").on("click", function () {
 });
 */
 
+// ---------------------------------
+// Daily planner hourly table events
 
 // Save button is clicked, unblink the save icon
-$("div.row.time-block > .saveBtn").on("click keyup", function () {
+$("div.row.time-block > .saveBtn").on("click keyup", function (event) {
     //console.log($(this).parent()[0].id);
     //console.log($(this).prev().val());
-    planner.set_data($(this).parent()[0].id, $(this).prev().val());
-    $(this).removeClass("blink_me");  // unblink the save button after save
+    if (event.type == "click" || (event.type === "keyup" && event.keyCode === 13)) {
+        $(this).removeClass("blink_me");  // unblink the save button after save
+    }
 });
 
 // If content is modified in any textarea section, blink the save icon sibling element
-$("div.row.time-block > textarea").on("input", function () {
+$("div.row.time-block > textarea").on("input", function (event) {
     //console.log($(this).parent()[0].id);
     $(this).next().addClass("blink_me"); // content changed, apply blink to save button
 });
 
 
-// Navigation around the day planner
+// --------------------------------
+// Daily planner navigation buttons
 
 // Up one day button is pressed
 $(".up-day").on("click keyup", function (event) {
     if (event.type == "click" || (event.type === "keyup" && event.keyCode === 13)) {
-        show_starthour -= (onehour * 24);
+        show_starthour -= (onehour * rows_to_display);
         display_table(show_starthour, rows_to_display);
     };
 });
@@ -327,11 +364,12 @@ $(".down-one").on("click keyup", function (event) {
 // Down one day button is pressed
 $(".down-day").on("click keyup", function (event) {
     if (event.type === "click" || (event.type === "keyup" && event.keyCode === 13)) {
-        show_starthour += (onehour * 24);
+        show_starthour += (onehour * rows_to_display);
         display_table(show_starthour, rows_to_display);
     };
 });
 
+// ----------------
 // jsCalendar event - when user clicks on a selected date (and refresh the current hour)
 myjsCalendar.onDateClick(function (event, clickeddate) {
     //this.set(clickedate);
@@ -346,8 +384,8 @@ myjsCalendar.onDateClick(function (event, clickeddate) {
     //console.log("selected ", clickeddate.toString());
 });
 
-
-// Respond to window resizing --- TODO: dynamically resize planner layout to viewport
+// --------------------------------
+// Respond to window resizing event --- TODO: dynamically resize planner layout to viewport
 function refresh_window() {
     if (fit_in_window) {
         let maxrows = Math.floor(($(window).height() -
@@ -369,6 +407,10 @@ $(window).on("resize", refresh_window);
 // collapse / show calendar day selector
 $(".btn, #selectdaytoggle").on("hidden.bs.collapse shown.bs.collapse", refresh_window);
 
+// ---------------
+// Page load start
+
 // refresh the clock on page load
 refreshclock();
 
+});

@@ -48,3 +48,4 @@ Published url: [https://andrenrwn.github.io/dayplanner/](https://andrenrwn.githu
 [Bootstrap](https://getbootstrap.com/) - UI, formatting and navbar
 [jsCalendar](https://gramthanos.github.io/jsCalendar/docs.html) - Date selector
 [Calendar image](https://placekitten.com/) - calendar image from placekitten.com
+[Day.js](https://day.js.org/) - Day and time JavaScript API

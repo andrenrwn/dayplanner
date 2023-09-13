@@ -94,9 +94,9 @@ body {
     1px -1px 5px black,
     -1px -1px 5px black; */
   text-align: center;
-  align-items:center;
+  align-items: center;
   min-width: 100%;
-  line-height:0;
+  line-height: 0;
 }
 
 #select-day {
@@ -105,12 +105,17 @@ body {
   font-size: 8em;
   color: white;
 }
-
-#select-month-year {
+#select-month-year, #calendarfaceclock {
   width: 100%;
   font-size: 1.25em;
   font-weight: bold;
   color: white;
+}
+#select-month-year{
+  line-height: 0;
+}
+#calendarfaceclock {
+  line-height: 1;
 }
 
 .calendarface>div>section {
