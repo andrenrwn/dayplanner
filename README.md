@@ -45,6 +45,9 @@ Published url: [https://andrenrwn.github.io/dayplanner/](https://andrenrwn.githu
 ## Compoments & Credits
 
 [jQuery](https://jquery.com/)
+
 [Bootstrap](https://getbootstrap.com/) - UI, formatting and navbar
+
 [jsCalendar](https://gramthanos.github.io/jsCalendar/docs.html) - Date selector
+
 [Calendar image](https://placekitten.com/) - calendar image from placekitten.com

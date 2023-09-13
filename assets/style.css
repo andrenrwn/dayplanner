@@ -1,6 +1,7 @@
 /* CSS from starter code 
 
 jsCalendar docs https://gramthanos.github.io/jsCalendar/docs.html
+
 */
 
 :root {
@@ -118,7 +119,7 @@ body {
   min-height: 314px;
   min-width: 200px;
   background-image: linear-gradient(rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 0)), url("http://placekitten.com/200/314/");
+      rgba(0, 0, 0, 0)), url("https://placekitten.com/200/314/");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
