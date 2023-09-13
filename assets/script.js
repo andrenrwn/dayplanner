@@ -30,13 +30,11 @@ var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data 
 var rows_to_display = 9; // show how many hours in a day
 
 function getbaseday(day) {
-    console.log("getbaseday: ", day);
     var d = new Date(day);
     d.setHours(0);
     d.setMinutes(0);
     d.setSeconds(0);
     d.setMilliseconds(0);
-    console.log("getbaseday to: ", Date.parse(d));
     return Date.parse(d);
 }
 
@@ -48,6 +46,7 @@ var show_starthour = getbaseday(selectedday) + (onehour * 9); // start from 9am
 
 var fit_in_window = false;
 var show_min_rows = 3; // minimum number of rows to show in window, if we are following viewport height
+var thishour_displayed = false; // indicates if this hour is displayed or not
 
 // Use jsCalendar as the date selector
 var myjsCalendar = jsCalendar.new('#mydateselector', selectedday.toDateString);
@@ -82,9 +81,9 @@ class plannerobj {
     // Store data in memory
     set_data(key, content) {
         if (key === undefined) {
-            console.log("set data ", this.pdata);
+            //console.log("set data ", this.pdata);
         } else {
-            console.log("set data overwriting " + this.pdata[key] + " on key " + key + " with " + content);
+            //console.log("set data overwriting " + this.pdata[key] + " on key " + key + " with " + content);
             this.pdata[key] = content;
         }
         this.store_data();
@@ -97,12 +96,12 @@ class plannerobj {
         //console.log(this.pdata);
         newdata = JSON.parse(localStorage.getItem(this.storagekey));
         Object.assign(this.pdata, newdata); // merge data from storage
-        console.log("merged from storage: ", this.pdata);
+        //console.log("merged from storage: ", this.pdata);
     }
     // Store data to localstorage
     store_data() {
-        console.log("saving to storage");
-        console.log(this.pdata);
+        //console.log("saving to storage");
+        //console.log(this.pdata);
         localStorage.setItem(this.storagekey, JSON.stringify(this.pdata));
         return true;
     }
@@ -175,6 +174,7 @@ function display_table(starthour, numrows) {
 
     // Add time blocks one by one
     for (var i = 0; i < numrows; i++) {
+        thishour_displayed = false; // clear flag before we refresh day planner display
         time_i = starthour + (i * onehour);
         let d = new Date(0);
         d.setUTCSeconds(time_i / 1000);
@@ -198,6 +198,7 @@ function display_table(starthour, numrows) {
             time_block.addClass("past");
             time_block.children().eq(1).attr("id", "");
         } else if (time_i === thishour) {
+            thishour_displayed = true; // enable flag that signifies this hour is in the display
             time_block.addClass("present");
             time_block.children().eq(1).attr("id", "timenow");
             time_block.children().eq(0).prepend(time_bar);
@@ -250,6 +251,8 @@ $("#selecttoday").on("click keyup", function () {
     display_table(show_starthour, rows_to_display);
 });
 
+// Scroll to this hour
+
 // Let the user specify how many rows of hours to display
 $("#numhoursdisplay").on('input', function () {
     var val = this.value;
@@ -263,7 +266,7 @@ $("#numhoursdisplay").on('input', function () {
         val = 9;
     }
     $("#numhoursdisplay").val(val);
-    rows_to_display = val;    
+    rows_to_display = val;
     display_table(show_starthour, rows_to_display);
 });
 
@@ -294,27 +297,35 @@ $("div.row.time-block > textarea").on("input", function () {
 // Navigation around the day planner
 
 // Up one day button is pressed
-$("#up-day").on("click keyup", function () {
-    show_starthour -= (onehour * 24);
-    display_table(show_starthour, rows_to_display);
+$(".up-day").on("click keyup", function (event) {
+    if (event.type == "click" || (event.type === "keyup" && event.keyCode === 13)) {
+        show_starthour -= (onehour * 24);
+        display_table(show_starthour, rows_to_display);
+    };
 });
 
 // Up one hour button is pressed
-$("#up-one").on("click keyup", function () {
-    show_starthour -= onehour;
-    display_table(show_starthour, rows_to_display);
+$(".up-one").on("click keyup", function (event) {
+    if (event.type === "click" || (event.type === "keyup" && event.keyCode === 13)) {
+        show_starthour -= onehour;
+        display_table(show_starthour, rows_to_display);
+    };
 });
 
 // Down one hour button is pressed
-$("#down-one").on("click keyup", function () {
-    show_starthour += onehour;
-    display_table(show_starthour, rows_to_display);
+$(".down-one").on("click keyup", function (event) {
+    if (event.type === "click" || (event.type === "keyup" && event.keyCode === 13)) {
+        show_starthour += onehour;
+        display_table(show_starthour, rows_to_display);
+    };
 });
 
 // Down one day button is pressed
-$("#down-day").on("click keyup", function () {
-    show_starthour += (onehour * 24);
-    display_table(show_starthour, rows_to_display);
+$(".down-day").on("click keyup", function (event) {
+    if (event.type === "click" || (event.type === "keyup" && event.keyCode === 13)) {
+        show_starthour += (onehour * 24);
+        display_table(show_starthour, rows_to_display);
+    };
 });
 
 // jsCalendar event - when user clicks on a selected date (and refresh the current hour)

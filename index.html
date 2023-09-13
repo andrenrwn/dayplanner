@@ -57,9 +57,13 @@
             Go to Today
           </li>
           <!-- scroll to the current hour  -->
+          <li id="gotothishour" class="nav-item px-2">
+            <a class="nav-link px-2" href="#timenow">Go to This Hour</a>
+          </li>
+          <!--
           <li class="nav-item px-2">
             <a class="nav-link" href="#timenow">Scroll To This Hour</a>
-          </li>
+          </li>-->
           <!-- bootstrap collapsible button -->
           <li id="selectdaytoggle" class="nav-item nav-link px-2" type="button" data-toggle="collapse"
             data-target="#collapseDaySelector" aria-expanded="false" aria-controls="collapseDaySelector" tabindex="0">
@@ -67,7 +71,8 @@
           </li>
           <!-- bootstrap datalist input, select num hours to display -->
 
-          <input id="numhoursdisplay" class="nav-item nav-link px-2" list="datalistOptions" placeholder="Hours to display" onfocus="this.value=''" onchange="this.blur();">
+          <input id="numhoursdisplay" class="nav-item nav-link px-2" list="datalistOptions"
+            placeholder="Hours to display" onfocus="this.value=''" onchange="this.blur();">
           <datalist id="datalistOptions">
             <option value="3">
             <option value="6">
@@ -128,7 +133,7 @@
     -->
 
     <!-- up button starts the display one hour before -->
-    <div id="up-day" class="scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
+    <div class="up-day scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
       <!-- bootstrap icon double-chevron-up -->
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-up"
         viewBox="0 0 16 16">
@@ -140,7 +145,7 @@
     </div>
 
     <!-- up button starts the display one hour before -->
-    <div id="up-one" class="scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
+    <div class="up-one scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
       <!-- bootstrap icon chevron-up -->
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
         class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
@@ -173,7 +178,7 @@
     </main>
 
     <!-- down button starts the display one hour after -->
-    <div id="down-one" class="scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
+    <div class="down-one scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
       <!-- bootstrap icon chevron-down -->
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
         class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
@@ -183,7 +188,7 @@
     </div>
 
     <!-- far down button starts the display one day after -->
-    <div id="down-day" class="scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
+    <div class="down-day scrollbutton d-flex justify-content-center btn" type="button" tabindex="0">
       <!-- bootstrap icon chevron-down -->
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
         class="bi bi-chevron-double-down" viewBox="0 0 16 16">
