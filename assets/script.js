@@ -323,27 +323,35 @@ $('#schedulelist').on("input", modifytext);
 // Navigation around the day planner
 
 // Up one day button is pressed
-$("#up-day").on("click keyup", function () {
-    show_starthour -= (onehour * 24);
-    display_table(show_starthour, rows_to_display);
+$(".up-page").on("click keyup", function (event) {
+    if ((event.type === "click") || ((event.type === "keyup") && (event.keyCode === 13))) {
+        show_starthour -= (onehour * rows_to_display);
+        display_table(show_starthour, rows_to_display);
+    };
 });
 
 // Up one hour button is pressed
-$("#up-one").on("click keyup", function () {
-    show_starthour -= onehour;
-    display_table(show_starthour, rows_to_display);
+$(".up-one").on("click keyup", function (event) {
+    if ((event.type === "click") || ((event.type === "keyup") && (event.keyCode === 13))) {
+        show_starthour -= onehour;
+        display_table(show_starthour, rows_to_display);
+    };
 });
 
 // Down one hour button is pressed
-$("#down-one").on("click keyup", function () {
-    show_starthour += onehour;
-    display_table(show_starthour, rows_to_display);
+$(".down-one").on("click keyup", function (event) {
+    if ((event.type === "click") || ((event.type === "keyup") && (event.keyCode === 13))) {
+        show_starthour += onehour;
+        display_table(show_starthour, rows_to_display);
+    };
 });
 
 // Down one day button is pressed
-$("#down-day").on("click keyup", function () {
-    show_starthour += (onehour * 24);
-    display_table(show_starthour, rows_to_display);
+$(".down-page").on("click keyup", function (event) {
+    if ((event.type === "click") || ((event.type === "keyup") && (event.keyCode === 13))) {
+        show_starthour += (onehour * rows_to_display);
+        display_table(show_starthour, rows_to_display);
+    };
 });
 
 
