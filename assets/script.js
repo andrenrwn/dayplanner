@@ -36,7 +36,7 @@ function getbaseday(day) {
     d.setMinutes(0);
     d.setSeconds(0);
     d.setMilliseconds(0);
-    console.log("getbaseday to: ", Date.parse(d));
+    // console.log("getbaseday to: ", Date.parse(d));
     return Date.parse(d);
 }
 
@@ -133,6 +133,29 @@ var time_bar = $($.parseHTML('<div id="timebar"></div>'));
 
 // Refresh the clock every second
 function refreshclock() {
+
+    let djs = dayjs();
+
+    // Display the current Day on top clock
+    $('#currentDay').text(djs.format('dddd D MMMM YYYY hh:mm:ss'));
+
+    // Display the current Day on the main calendar
+    $('#select-day').text(djs.$D);
+    $('#select-month-year').text(djs.format('MMMM · YYYY'));
+    $('#calendarfacetime').text(djs.format('hh:mm:ss'));
+
+    // Display the current time:seconds on the time bar in the current hour block
+    $('#timebar').text(djs.format('mm:ss'));
+    $('#timebar').height((djs.$m * 60 + djs.$s) / 36 + "%");
+
+    thishour = Math.floor(djs.valueOf() / onehour) * onehour; // update thishour
+
+    // Re-render the table if we just turned the hour
+    if ((djs.minute() + djs.second()) < 1) {
+        display_table(show_starthour, rows_to_display);
+    }
+
+    /********** uncomment for non-Day.js implementation
     let d = new Date();
 
     // Display the current Day on top clock
@@ -160,6 +183,7 @@ function refreshclock() {
     if ((d.getMinutes() + d.getSeconds()) < 2) {
         display_table(show_starthour, rows_to_display);
     }
+    /uncomment for non-Day.js implementation ************/
 }
 
 // Create a timer to display current date/time
@@ -263,7 +287,7 @@ $("#numhoursdisplay").on('input', function () {
         val = 9;
     }
     $("#numhoursdisplay").val(val);
-    rows_to_display = val;    
+    rows_to_display = val;
     display_table(show_starthour, rows_to_display);
 });
 
