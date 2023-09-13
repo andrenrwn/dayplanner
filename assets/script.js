@@ -182,8 +182,9 @@ function refreshclock() {
     // Re-render the table if we just turned the hour
     if ((d.getMinutes() + d.getSeconds()) < 2) {
         display_table(show_starthour, rows_to_display);
-    }
-    /uncomment for non-Day.js implementation ************/
+    };
+    ********** /uncomment for non-Day.js implementation */
+
 }
 
 // Create a timer to display current date/time
@@ -301,19 +302,23 @@ $("#search").on("click", function () {
 
 
 // Save button is clicked, unblink the save icon
-$("div.row.time-block > .saveBtn").on("click keyup", function () {
-    //console.log($(this).parent()[0].id);
-    //console.log($(this).prev().val());
-    planner.set_data($(this).parent()[0].id, $(this).prev().val());
-    $(this).removeClass("blink_me");  // unblink the save button after save
-});
+function savebutton(event) {
+    if ((event.target.tagName === "BUTTON") && // only for the save button
+        ((event.type === "click") || ((event.type === "keyup") && (event.keyCode === 13)))) { // only for clicks or <enter> keyup
+        planner.set_data(event.target.parentNode.id, event.target.previousElementSibling.value); // store textare value
+        event.target.classList.remove("blink_me");
+    }
+}
 
-// If content is modified in any textarea section, blink the save icon sibling element
-$("div.row.time-block > textarea").on("input", function () {
-    //console.log($(this).parent()[0].id);
-    $(this).next().addClass("blink_me"); // content changed, apply blink to save button
-});
+function modifytext(event) {
+    if (event.target.tagName === "TEXTAREA") {
+        event.target.nextElementSibling.classList.add("blink_me");
+    }
+}
 
+$('#schedulelist').on("click keyup", savebutton);
+
+$('#schedulelist').on("input", modifytext);
 
 // Navigation around the day planner
 
@@ -340,6 +345,7 @@ $("#down-day").on("click keyup", function () {
     show_starthour += (onehour * 24);
     display_table(show_starthour, rows_to_display);
 });
+
 
 // jsCalendar event - when user clicks on a selected date (and refresh the current hour)
 myjsCalendar.onDateClick(function (event, clickeddate) {
