@@ -1,6 +1,15 @@
-/* CSS from starter code 
+/* CSS
 
-jsCalendar docs https://gramthanos.github.io/jsCalendar/docs.html
+Day Planner
+Implement a day planner where:
+  Users can enter text information into time blocks and save them into the local browser storage
+  Users can navigate to their desired days to view or enter/modify the information
+
+CSS depends on the following components:
+[jQuery](https://jquery.com/)
+[Bootstrap](https://getbootstrap.com/) - UI, formatting and navbar
+[jsCalendar](https://gramthanos.github.io/jsCalendar/docs.html) - Date selector
+[Calendar image](https://placekitten.com/) - calendar image from placekitten.com
 
 */
 

@@ -1,27 +1,14 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
-/*$(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
-});
-*/
+// Day Planner
+// Implement a day planner where:
+//   Users can enter text information into time blocks and save them into the local browser storage
+//   Users can navigate to their desired days to view or enter/modify the information
+//
+// Depends on the following components:
+// [jQuery](https://jquery.com/)
+// [Bootstrap](https://getbootstrap.com/) - UI, formatting and navbar
+// [jsCalendar](https://gramthanos.github.io/jsCalendar/docs.html) - Date selector
+// [Day.js](https://day.js.org/) - Day.js Javascript date/time API
+
 
 // Global variables
 var selectedday = Date();
@@ -29,14 +16,13 @@ const onehour = 3600000; // 1 hour in epoch milliseconds
 var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
 var rows_to_display = 9; // show how many hours in a day
 
+// Get the day's base timestamp (current timestamp minus the current time)
 function getbaseday(day) {
-    console.log("getbaseday: ", day);
     var d = new Date(day);
     d.setHours(0);
     d.setMinutes(0);
     d.setSeconds(0);
     d.setMilliseconds(0);
-    // console.log("getbaseday to: ", Date.parse(d));
     return Date.parse(d);
 }
 
@@ -46,7 +32,7 @@ function getbaseday(day) {
 //var show_starthour = Math.floor(selectedday / onehour) * onehour - (Math.floor(rows_to_display/2) * onehour); // 11-hour before this hour
 var show_starthour = getbaseday(selectedday) + (onehour * 9); // start from 9am
 
-var fit_in_window = false;
+var fit_in_window = false; // set to true to have the day planner resize with window viewport
 var show_min_rows = 3; // minimum number of rows to show in window, if we are following viewport height
 
 // Use jsCalendar as the date selector
@@ -82,9 +68,9 @@ class plannerobj {
     // Store data in memory
     set_data(key, content) {
         if (key === undefined) {
-            console.log("set data ", this.pdata);
+            //console.log("set data ", this.pdata);
         } else {
-            console.log("set data overwriting " + this.pdata[key] + " on key " + key + " with " + content);
+            //console.log("set data overwriting " + this.pdata[key] + " on key " + key + " with " + content);
             this.pdata[key] = content;
         }
         this.store_data();
@@ -97,12 +83,12 @@ class plannerobj {
         //console.log(this.pdata);
         newdata = JSON.parse(localStorage.getItem(this.storagekey));
         Object.assign(this.pdata, newdata); // merge data from storage
-        console.log("merged from storage: ", this.pdata);
+        //console.log("merged from storage: ", this.pdata);
     }
     // Store data to localstorage
     store_data() {
-        console.log("saving to storage");
-        console.log(this.pdata);
+        //console.log("saving to storage");
+        //console.log(this.pdata);
         localStorage.setItem(this.storagekey, JSON.stringify(this.pdata));
         return true;
     }
@@ -188,7 +174,7 @@ function refreshclock() {
 }
 
 // Create a timer to display current date/time
-const timerID = setInterval(refreshclock, 1000); // update every second
+const timerID = setInterval(refreshclock, 200); // update every second
 
 // ------------------
 // Render day planner
@@ -197,6 +183,8 @@ const timerID = setInterval(refreshclock, 1000); // update every second
 // Build out (render) schedule table for the day
 function display_table(starthour, numrows) {
     $("#schedulelist").empty(); // Clear all time blocks from the display
+
+    var dateheaderrows = 0; // we need an extra padding so our nav button doesn't move
 
     // Add time blocks one by one
     for (var i = 0; i < numrows; i++) {
@@ -233,6 +221,8 @@ function display_table(starthour, numrows) {
 
         // Add a new row to display the date when this is 00 hours or the beginning of the table
         if (d.getHours() === 0 || i === 0) {
+            dateheaderrows ++;
+
             //let dayformat = new Intl.DateTimeFormat('default', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
             let dayformat = new Date(time_i).toLocaleString('en-US', {
                 weekday: 'long',
@@ -246,6 +236,9 @@ function display_table(starthour, numrows) {
 
         time_block.clone().appendTo("#schedulelist");
     }
+    if (dateheaderrows < 2) {
+        $("#schedulelist").append('<div class= "dayseparator row time-block" >&nbsp;</div>');
+    }
 }
 
 // Render all elements before attaching JQuery events to it
@@ -257,25 +250,42 @@ display_table(show_starthour, rows_to_display);
 
 // Navbar - pressing enter should also toggle bootstrap collapsible button
 $("#selectdaytoggle").keyup(function (event) {
-    console.log("keypress on collapse button");
     if (event.keyCode === 13) {
         $("#selectdaytoggle").click();
     }
 });
 
-// Select today's date on both day selector and day planner
-$("#selecttoday").on("click keyup", function () {
-    selectedday = Date();
-    myjsCalendar.clearselect();
-    myjsCalendar.set(new Date());
-    myjsCalendar.refresh();
-    thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
-    //show_starthour = thishour - onehour; // (onehour * Math.floor(rows_to_display/2)); // past hours to display
-    show_starthour = getbaseday(selectedday) + (onehour * 9); // start from 9am
-    display_table(show_starthour, rows_to_display);
+// Nav item - Select today's date on both day selector and day planner
+$("#selecttoday").on("click keyup", function (event) {
+    if ((event.type === "click") || ((event.type === "keyup") && (event.keyCode === 13))) {
+        selectedday = Date();
+        myjsCalendar.clearselect();
+        myjsCalendar.set(new Date());
+        myjsCalendar.refresh();
+        thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
+        //show_starthour = thishour - onehour; // (onehour * Math.floor(rows_to_display/2)); // past hours to display
+        show_starthour = getbaseday(selectedday) + (onehour * 9); // start from 9am
+        display_table(show_starthour, rows_to_display);
+    }
 });
 
-// Let the user specify how many rows of hours to display
+// Nav item - Select today's day and hour, then scroll to it
+$("#gotothishour").on("click keyup", function (event) {
+    event.preventDefault(); // stop us from following the base a href again if JS is active
+    if ((event.type === "click") || ((event.type === "keyup") && (event.keyCode === 13))) {
+        selectedday = Date();
+        myjsCalendar.clearselect();
+        myjsCalendar.set(new Date());
+        myjsCalendar.refresh();
+        thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
+        //show_starthour = thishour - onehour; // (onehour * Math.floor(rows_to_display/2)); // past hours to display
+        show_starthour = thishour - onehour; // display this hour on the second row
+        display_table(show_starthour, rows_to_display);
+        document.getElementById("timenow").scrollIntoView();
+    }
+});
+
+// Nav item - Let the user specify how many rows of hours to display
 $("#numhoursdisplay").on('input', function () {
     var val = this.value;
     if (Number.isInteger(Number.parseInt(val))) {
@@ -292,7 +302,7 @@ $("#numhoursdisplay").on('input', function () {
     display_table(show_starthour, rows_to_display);
 });
 
-// Navbar - Search button is pressed
+// Nav item - TODO: Not implemented: Search button is pressed
 /*
 $("#search").on("click", function () {
     console.log("search for: ");
@@ -369,7 +379,6 @@ myjsCalendar.onDateClick(function (event, clickeddate) {
     //console.log("selected ", clickeddate.toString());
 });
 
-
 // Respond to window resizing --- TODO: dynamically resize planner layout to viewport
 function refresh_window() {
     if (fit_in_window) {
@@ -390,7 +399,8 @@ function refresh_window() {
 $(window).on("resize", refresh_window);
 
 // collapse / show calendar day selector
-$(".btn, #selectdaytoggle").on("hidden.bs.collapse shown.bs.collapse", refresh_window);
+// TODO: doesn't work - need to refresh after collaps animation
+//$(".btn, #selectdaytoggle").on("hidden.bs.collapse shown.bs.collapse", refresh_window); 
 
 // refresh the clock on page load
 refreshclock();
