@@ -24,6 +24,8 @@
 */
 
 // Global variables
+var now = dayjs();
+
 var selectedday = Date();
 const onehour = 3600000; // 1 hour in epoch milliseconds
 var thishour = Math.floor(Date.parse(selectedday) / onehour) * onehour; // data in hourly blocks
@@ -252,6 +254,8 @@ $("#selecttoday").on("click keyup", function () {
 });
 
 // Scroll to this hour
+
+
 
 // Let the user specify how many rows of hours to display
 $("#numhoursdisplay").on('input', function () {

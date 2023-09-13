@@ -71,7 +71,7 @@
           </li>
           <!-- bootstrap datalist input, select num hours to display -->
 
-          <input id="numhoursdisplay" class="nav-item nav-link px-2" list="datalistOptions"
+          <input id="numhoursdisplay" class="nav-item nav-link mx-2 px-2" list="datalistOptions"
             placeholder="Hours to display" onfocus="this.value=''" onchange="this.blur();">
           <datalist id="datalistOptions">
             <option value="3">
@@ -214,7 +214,10 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
-  <!-- Not using DayJS since we are using epoch and Date() for calculations
+  <!-- Day.js per requirement -->
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+  <script>dayjs().format()</script>
+  <!--
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"></script>
   -->
   <script src="./assets/script.js"></script>
