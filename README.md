@@ -51,3 +51,5 @@ Published url: [https://andrenrwn.github.io/dayplanner/](https://andrenrwn.githu
 [jsCalendar](https://gramthanos.github.io/jsCalendar/docs.html) - Date selector
 
 [Calendar image](https://placekitten.com/) - calendar image from placekitten.com
+
+[Day.js](https://day.js.org/) - Day.js Javascript date/time API
